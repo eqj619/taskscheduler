@@ -1,4 +1,11 @@
 """
+//
+//  taskscheduler.py
+//
+//  Created by EIJI OGA on 03/30/20.
+//  Copyright © 2020 Eiji Oga. All rights reserved.
+//
+
 Task Scheduler
 List of tasks which is able to generate most value within budget based on story point.
 
@@ -79,10 +86,13 @@ class Scheduler:
                     dp[i+1][w] = dp[i][w]
                     tdp[i+1][w] = tdp[i][w]         # copy list of tasks
 
+        scheduledTasklist = []
         for x in range (0, numOfTasks+1):
             if(tdp[x][numOfTasks][w].taskId != 0):
-                print(f'taskID:%d, sp:%d val:%d'% (tdp[x][numOfTasks][w].taskId, tdp[x][numOfTasks][w].storyPoint, tdp[x][numOfTasks][w].value))
-        return (dp[numOfTasks][w])
+                scheduledTasklist.append (tdp[x][numOfTasks][w])
+                #print(f'taskID:%d, sp:%d val:%d'% (tdp[x][numOfTasks][w].taskId, tdp[x][numOfTasks][w].storyPoint, tdp[x][numOfTasks][w].value))
+        return (scheduledTasklist)
+
 #main ---------------
 args = sys.argv
 print(args[1])
@@ -97,5 +107,11 @@ for i in range(0, len(df.index)):
 Sprint1 = Scheduler()
 #InputTasks = [Task(1001,2,3), Task(1002,1,2), Task(1003,3,6), Task(1004,2,1), Task(1005,1,3), Task(1006,5, 85)]
 
-totalPoint = Sprint1.scheduleMuxSPvalue(CSVInputTasks, 9)
+scheduledlist = Sprint1.scheduleMuxSPvalue(CSVInputTasks, 9)
+
+totalPoint = 0
+for x in range(0, len(scheduledlist)):
+    if(scheduledlist[x].taskId !=0):
+        totalPoint += scheduledlist[x].value
+        print(f'taskID:%d, sp:%d val:%d'% (scheduledlist[x].taskId, scheduledlist[x].storyPoint, scheduledlist[x].value))
 print (f'maximum story point (%d)'% totalPoint)
