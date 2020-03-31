@@ -91,7 +91,8 @@ class Scheduler:
 
 #main ---------------
 args = sys.argv
-print(args[1])
+print("input file = " + args[1])
+print("story points budget = " + args[2])
 
 df = pd.read_csv(args[1], encoding='utf-8', dtype={"TASKID": int, "STORYPOINT":int,"VALUE":int})
 
@@ -103,7 +104,7 @@ for i in range(0, len(df.index)):
 Sprint1 = Scheduler()
 #InputTasks = [Task(1001,2,3), Task(1002,1,2), Task(1003,3,6), Task(1004,2,1), Task(1005,1,3), Task(1006,5, 85)]
 
-scheduledlist = Sprint1.scheduleMuxSPvalue(CSVInputTasks, 9)
+scheduledlist = Sprint1.scheduleMuxSPvalue(CSVInputTasks, int(args[2]))
 
 totalPoint = 0
 for x in range(0, len(scheduledlist)):
