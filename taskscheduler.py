@@ -10,7 +10,7 @@ Task Scheduler
 List of tasks which is able to generate most value within budget based on story point.
 
 usage:
-$python taskscheduler.py <csv filename>
+$python taskscheduler.py <csv filename> <story point>
 
 csv file scheme sample:
     TASKID,STORYPOINT,VALUE
@@ -27,6 +27,10 @@ list of tasks
 maximum Values
 
 example:
+$ python taskscheduler.py sprint1.csv 9
+input file = sprint1.csv
+story points budget = 9
+create Scheduler instance
 taskID:2002, sp:3 val:6
 taskID:2004, sp:1 val:3
 taskID:2005, sp:5 val:85
