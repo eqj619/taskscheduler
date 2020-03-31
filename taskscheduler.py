@@ -13,13 +13,14 @@ usage:
 $python taskscheduler.py <csv filename>
 
 csv file scheme sample:
-TASKID,STORYPOINT,VALUE
-2000,2,3
-2001,1,2
-2002,3,6
-2003,2,1
-2004,1,3
-2005,5,85
+    TASKID,STORYPOINT,VALUE
+    2000,2,3
+    2001,1,2
+    2002,3,6
+    2003,2,1
+    2004,1,3
+    2005,5,85
+note: order of tasks in csv file is priority.
 
 output:
 list of tasks
@@ -51,13 +52,7 @@ DP ... Dynamic Programmming
 class Scheduler:
     def __init__(self):
         #taskDP = [[tasklist for i in range(spbt+1)] for j in range (notask)]
-        """
-    def addTasklist(self, tIdx, spIdx, t):
-        taskDP[tIdx][spIdx].tasklist.append(t)
-
-    def copyTasklist(self, srcList, dstList):
-        dstList = srcList
-        """
+        print("create Scheduler instance")
 
     def scheduleMuxSPvalue(self, tasks, sprintBudget):
         numOfTasks = len(tasks)
@@ -84,7 +79,8 @@ class Scheduler:
                                break
                 else:
                     dp[i+1][w] = dp[i][w]
-                    tdp[i+1][w] = tdp[i][w]         # copy list of tasks
+                    for x in range(0, numOfTasks):    # copy all task list
+                        tdp[x][i+1][w] = tdp[x][i][w]
 
         scheduledTasklist = []
         for x in range (0, numOfTasks+1):
