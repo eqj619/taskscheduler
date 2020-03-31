@@ -1,15 +1,32 @@
 """
 Task Scheduler
-List the most values of tasks within a sprint and budget
+List of tasks which is able to generate most value within budget based on story point.
 
-input:
-list of tasks (TaskId, Story point, Values)
-budget in a sprint
+usage:
+$python taskscheduler.py <csv filename>
+
+csv file scheme sample:
+TASKID,STORYPOINT,VALUE
+2000,2,3
+2001,1,2
+2002,3,6
+2003,2,1
+2004,1,3
+2005,5,85
 
 output:
-maximum Values
 list of tasks
+maximum Values
+
+example:
+taskID:2002, sp:3 val:6
+taskID:2004, sp:1 val:3
+taskID:2005, sp:5 val:85
+maximum story point (94)
+
 """
+import sys
+import pandas as pd
 
 class Task:
     def __init__(self, tid, sp, val):
@@ -38,7 +55,6 @@ class Scheduler:
     def scheduleMuxSPvalue(self, tasks, sprintBudget):
         numOfTasks = len(tasks)
         dp = [[0 for i in range(sprintBudget+1)] for j in range (numOfTasks+1)]
-
         tdp = [[[Task(0,0,0) for k in range(numOfTasks+20)] for i in range(sprintBudget+1)] for j in range (numOfTasks+1)]
 
         for i in range (0, numOfTasks):
@@ -68,8 +84,18 @@ class Scheduler:
                 print(f'taskID:%d, sp:%d val:%d'% (tdp[x][numOfTasks][w].taskId, tdp[x][numOfTasks][w].storyPoint, tdp[x][numOfTasks][w].value))
         return (dp[numOfTasks][w])
 #main ---------------
-Sprint1 = Scheduler()
-InputTasks = [Task(1001,2,3), Task(1002,1,2), Task(1003,3,6), Task(1004,2,1), Task(1005,1,3), Task(1006,5, 85)]
+args = sys.argv
+print(args[1])
 
-totalPoint = Sprint1.scheduleMuxSPvalue(InputTasks, 9)
+df = pd.read_csv(args[1], encoding='utf-8', dtype={"TASKID": int, "STORYPOINT":int,"VALUE":int})
+
+CSVInputTasks = []
+for i in range(0, len(df.index)):
+    #print(df['TASKID'][i])
+    CSVInputTasks.append( Task(df['TASKID'][i], df['STORYPOINT'][i], df['VALUE'][i]) )
+
+Sprint1 = Scheduler()
+#InputTasks = [Task(1001,2,3), Task(1002,1,2), Task(1003,3,6), Task(1004,2,1), Task(1005,1,3), Task(1006,5, 85)]
+
+totalPoint = Sprint1.scheduleMuxSPvalue(CSVInputTasks, 9)
 print (f'maximum story point (%d)'% totalPoint)
