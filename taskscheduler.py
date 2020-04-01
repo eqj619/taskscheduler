@@ -47,13 +47,6 @@ class Task:
         self.storyPoint = sp
         self.value = val
 
-"""
-input:
-numOfTask ... the number of candidate tasks in a sprint
-sprintBudget ... total story points in a sprint
-
-DP ... Dynamic Programmming
-"""
 class Scheduler:
     def __init__(self):
         #taskDP = [[tasklist for i in range(spbt+1)] for j in range (notask)]
@@ -132,7 +125,8 @@ def main():
     for x in range(0, len(scheduledlist)):
         if(scheduledlist[x].taskId !=0):
             totalPoint += scheduledlist[x].value
-            print(f'taskID:%d, sp:%d val:%d'% (scheduledlist[x].taskId, scheduledlist[x].storyPoint, scheduledlist[x].value))
+            print(f'taskID:%d, sp:%d val:%d'%
+                (scheduledlist[x].taskId, scheduledlist[x].storyPoint, scheduledlist[x].value))
     print (f'maximum story point (%d)'% totalPoint)
 
 # main()
