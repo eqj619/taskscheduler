@@ -37,6 +37,7 @@ taskID:2005, sp:5 val:85
 maximum story point (94)
 
 """
+import logging
 import sys
 import pandas as pd
 
@@ -59,7 +60,9 @@ class Scheduler:
         print("create Scheduler instance")
 
     def scheduleMuxSPvalue(self, tasks, sprintBudget):
+        logging.debug('Start of factorial(%d%%)'  % (sprintBudget))
         numOfTasks = len(tasks)
+        logging.debug(f'numOfTasks = %d'% numOfTasks)
         dp = [[0 for i in range(sprintBudget+1)] for j in range (numOfTasks+1)]
         tdp = [[[Task(0,0,0) for k in range(numOfTasks+20)] for i in range(sprintBudget+1)] for j in range (numOfTasks+1)]
 
@@ -69,31 +72,39 @@ class Scheduler:
                 #print(w)
                 if ( w >= tasks[i].storyPoint):
                     dp[i+1][w] = max (dp[i][w-tasks[i].storyPoint] + tasks[i].value, dp[i][w])
+                    logging.debug(f'dp[%d][%d-%d]+%d=%d >>  dp[%d][%d]=%d'%
+                        (i, w, tasks[i].storyPoint, tasks[i].value, dp[i][w-tasks[i].storyPoint], i, w, dp[i][w]))
                     if( dp[i+1][w] == dp[i][w]):
                         for x in range(0, numOfTasks):    # copy all task list
-                            #print(f'[%d][%d][%d] = [%d][%d][%d]'% (x, i+1, w, x, i,w-tasks[i].storyPoint))
                             tdp[x][i+1][w] = tdp[x][i][w]
                     else:
                         for x in range(0, numOfTasks):    # copy all tasl list
-                            #print(f'[%d][%d][%d] = [%d][%d][%d]'% (x, i+1, w, x, i,w-tasks[i].storyPoint))
                             tdp[x][i+1][w] = tdp[x][i][w-tasks[i].storyPoint]
                         for x in range(0, numOfTasks):
                             if (tdp[x][i+1][w].taskId == 0):           # find empty slot
                                tdp[x][i+1][w] = tasks[i]
                                break
                 else:
+                    logging.debug(f'dp[%d][%d-%d]+%d=%d <<  dp[%d][%d]=%d'%
+                        (i, w, tasks[i].storyPoint, tasks[i].value, dp[i][w-tasks[i].storyPoint], i, w, dp[i][w]))
                     dp[i+1][w] = dp[i][w]
                     for x in range(0, numOfTasks):    # copy all task list
                         tdp[x][i+1][w] = tdp[x][i][w]
+
+            for ii in range(0, numOfTasks+1):
+                logging.debug(dp[ii])
 
         scheduledTasklist = []
         for x in range (0, numOfTasks+1):
             if(tdp[x][numOfTasks][w].taskId != 0):
                 scheduledTasklist.append (tdp[x][numOfTasks][w])
-                #print(f'taskID:%d, sp:%d val:%d'% (tdp[x][numOfTasks][w].taskId, tdp[x][numOfTasks][w].storyPoint, tdp[x][numOfTasks][w].value))
         return (scheduledTasklist)
 
 #main ---------------
+#logging.basicConfig(level=logging.DEBUG, format='%(asctime)s -  %(levelname)s -  %(message)s')
+logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s -  %(levelname)s -  %(message)s')
+logging.debug('Start of program')
+
 args = sys.argv
 try:
     print("input file = " + args[1])
@@ -103,12 +114,12 @@ except:
     print("$ python taskscheduler.py <csv file> <budget>")
     print("$ python taskscheduler.py sprint1.csv 9")
     exit(0)
-    
+
 df = pd.read_csv(args[1], encoding='utf-8', dtype={"TASKID": int, "STORYPOINT":int,"VALUE":int})
 
 CSVInputTasks = []
 for i in range(0, len(df.index)):
-    #print(df['TASKID'][i])
+    logging.debug(df['TASKID'][i])
     CSVInputTasks.append( Task(df['TASKID'][i], df['STORYPOINT'][i], df['VALUE'][i]) )
 
 Sprint1 = Scheduler()
