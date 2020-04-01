@@ -53,7 +53,7 @@ class Scheduler:
         print("create Scheduler instance")
 
     def scheduleMuxSPvalue(self, tasks, sprintBudget):
-        logging.debug('Start of factorial(%d%%)'  % (sprintBudget))
+        logging.debug('Start to find tasks to make maximum value within %d'% (sprintBudget))
         numOfTasks = len(tasks)
         logging.debug(f'numOfTasks = %d'% numOfTasks)
         dp = [[0 for i in range(sprintBudget+1)] for j in range (numOfTasks+1)]
