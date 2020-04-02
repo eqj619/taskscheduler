@@ -38,6 +38,7 @@ maximum story point (94)
 
 """
 import logging
+import datetime
 import sys
 import pandas as pd
 
@@ -95,8 +96,11 @@ class Scheduler:
 
 ################################################################################
 def main():
-    #logging.basicConfig(level=logging.DEBUG, format='%(asctime)s -  %(levelname)s -  %(message)s')
-    logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s -  %(levelname)s -  %(message)s')
+    now = datetime.datetime.now()
+    logger = logging.getLogger(__name__)
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s -  %(levelname)s -  %(message)s',
+                        filename=now.strftime("%Y-%m-%d" + ".log"))
     logging.debug('Start of program')
 
     args = sys.argv
@@ -104,6 +108,7 @@ def main():
         print("input file = " + args[1])
         print("story points budget = " + args[2])
     except:
+        logging.error('may be argment type or missing error.')
         print("Usage:")
         print("$ python taskscheduler.py <csv file> <budget>")
         print("$ python taskscheduler.py sprint1.csv 9")
@@ -113,21 +118,26 @@ def main():
 
     CSVInputTasks = []
     for i in range(0, len(df.index)):
-        logging.debug(df['TASKID'][i])
         CSVInputTasks.append( Task(df['TASKID'][i], df['STORYPOINT'][i], df['VALUE'][i]) )
+        logging.info(f'InputTask[%d] %d:%d:%d'%
+            (i, CSVInputTasks[i].taskId, CSVInputTasks[i].storyPoint, CSVInputTasks[i].value))
 
     Sprint1 = Scheduler()
     #InputTasks = [Task(1001,2,3), Task(1002,1,2), Task(1003,3,6), Task(1004,2,1), Task(1005,1,3), Task(1006,5, 85)]
 
     scheduledlist = Sprint1.scheduleMuxSPvalue(CSVInputTasks, int(args[2]))
 
+    logging.info ('Scheduled task list')
     totalPoint = 0
     for x in range(0, len(scheduledlist)):
         if(scheduledlist[x].taskId !=0):
             totalPoint += scheduledlist[x].value
             print(f'taskID:%d, sp:%d val:%d'%
                 (scheduledlist[x].taskId, scheduledlist[x].storyPoint, scheduledlist[x].value))
+            logging.info(f'taskID:%d, sp:%d val:%d'%
+                (scheduledlist[x].taskId, scheduledlist[x].storyPoint, scheduledlist[x].value))
     print (f'maximum story point (%d)'% totalPoint)
+    logging.info (f'maximum story point (%d)'% totalPoint)
 
 # main()
 if(__name__ == "__main__"):
