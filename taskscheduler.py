@@ -37,7 +37,7 @@ taskID:2005, sp:5 val:85
 maximum story point (94)
 
 """
-import logging
+import logging, logging.handlers
 import datetime
 import sys
 import pandas as pd
@@ -100,6 +100,16 @@ def main():
     logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s -  %(levelname)s -  %(message)s',
                         filename=now.strftime("%Y-%m-%d" + ".log"))
+    """
+    #use for /remotelogger/logserver.py instead local log above.
+    rootLogger = logging.getLogger('')
+    rootLogger.setLevel(logging.DEBUG)
+    socketHandler = logging.handlers.SocketHandler('localhost',
+                    logging.handlers.DEFAULT_TCP_LOGGING_PORT)
+    rootLogger.addHandler(socketHandler)
+    #use for /remotelogger/logserver.py
+    """
+
     logging.debug('Start of program')
 
     args = sys.argv
@@ -132,8 +142,8 @@ def main():
             tp = 'taskID:' + str(scheduledlist[x].taskId) + ' ' + str(scheduledlist[x].storyPoint) + ':' + str(scheduledlist[x].value)
             print(tp)
             logging.info(tp)
-    print (f'maximum story point (%d)'% totalPoint)
-    logging.info (f'maximum story point (%d)'% totalPoint)
+    print (f'total value (%d)'% totalPoint)
+    logging.info (f'total value (%d)'% totalPoint)
 
 # main()
 if(__name__ == "__main__"):
