@@ -22,3 +22,5 @@ create task list which is able to make maximum values within story points budget
     2003,2,1
     2004,1,3
     2005,5,85
+
+#### note: taskscheduler lists tasks the order in input csv file accordingly when task value is same. so that, please sort the tasks in csv file by priority. 
