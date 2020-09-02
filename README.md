@@ -1,13 +1,11 @@
 ## taskscheduler
 create task list which is able to make maximum values within story points budget
 
-usage:
+### usage:
   $python3 taskscheduler.py <csv.filename> <story_point>
 
-### usage:
-<code>$ python taskscheduler.py sprint1.csv 9</code>
-
-### output sample
+### sample output
+  $ python3 taskscheduler.py sprint1.csv 9
     story points budget = 9
     create Scheduler instance
     taskID:2002, sp:3 val:6
@@ -15,7 +13,7 @@ usage:
     taskID:2005, sp:5 val:85
     maximum story point (94)
 
-### sample csv file
+### input csv file
     $ cat sprint1.csv                               (git)-[master]
     TASKID,STORYPOINT,VALUE
     2000,2,3
